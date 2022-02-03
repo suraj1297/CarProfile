@@ -40,9 +40,6 @@ public class ProfileForm extends JFrame {
 
 	JLabel message = new JLabel("All fields in form are mandatory. For Car image only .jpg and .png files allowed.");
 
-//	Boolean brandValid, modelValid, colorValid, engineNoValid, seatsNoValid, licencePlateValid, ownerNameValid, telephoneNoValid , emailValid,
-//	licenseNoValid, socialSecurityNumberValid, addressValid ,serviceRecordsValid, warrantyYearValid = false;
-
 	JLabel heading, brand, model, color, year, engineNo, seatsNo, licencePlate, ownerName, telephoneNo, email,
 			licenseNo, socialSecurityNumber, address, serviceRecords, warrantyYear, Photo, imageName;
 
@@ -898,7 +895,7 @@ public class ProfileForm extends JFrame {
 				profile.setPhoto(finalImage);
 
 				boolean allFieldsValid = validateAllFields(profile);
-
+		
 				if (allFieldsValid) {
 					new Homepage(profile);
 					homeFrame.dispose();
