@@ -10,10 +10,14 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
+
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -55,6 +59,7 @@ public class ProfileForm extends JFrame {
 	JButton submitButton, PhotoField;
 	JFileChooser image;
 	String finalImage = "";
+	BufferedImage uploadedImage = null;
 
 	Panel headingPanel = new Panel();
 	Panel formPanel = new Panel();
@@ -853,6 +858,11 @@ public class ProfileForm extends JFrame {
 				String extension = picName.substring(picName.length() - 3);
 				if (extension.equals("jpg") || extension.equals("png")) {
 					finalImage = file.getPath();
+					try {
+						uploadedImage =  ImageIO.read(file);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					imageName.setText(picName);
 				} else {
 					dialogMessage("Error: For Car image only .jpg and .png files allowed");
@@ -878,7 +888,7 @@ public class ProfileForm extends JFrame {
 				profile.setColor(colorField.getText());
 
 				Date selectedDate = (Date) datePicker.getModel().getValue();
-				SimpleDateFormat myFormat = new SimpleDateFormat("yyyy.MM.dd");
+				SimpleDateFormat myFormat = new SimpleDateFormat("dd MMMM yyyy");
 				profile.setYear(myFormat.format(selectedDate));
 
 				profile.setEngineNo(engineNoField.getText());
@@ -892,7 +902,7 @@ public class ProfileForm extends JFrame {
 				profile.setAddress(addressField.getText());
 				profile.setServiceRecords(serviceRecordsField.getText());
 				profile.setWarrantyYear(warrantyYearField.getText());
-				profile.setPhoto(finalImage);
+				profile.setPhoto(uploadedImage);
 
 				boolean allFieldsValid = validateAllFields(profile);
 		
@@ -919,7 +929,7 @@ public class ProfileForm extends JFrame {
 				&& profile2.getEmail().length() > 0 && profile2.getLicenseNo().length() > 0
 				&& profile2.getSocialSecurityNumber().length() > 0 && profile2.getAddress().length() > 0
 				&& profile2.getServiceRecords().length() > 0 && profile2.getWarrantyYear().length() > 0
-				&& profile2.getPhoto().length() > 0) {
+				&& profile2.getPhoto() != null) {
 			return true;
 		}
 

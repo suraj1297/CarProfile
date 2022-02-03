@@ -8,8 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -17,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
@@ -27,8 +26,10 @@ public class ProfileDisplay extends JFrame{
 	licenseNo, socialSecurityNumber, address, serviceRecords, warrantyYear, Photo, imageName;
 
 	JTextField brandField, modelField, colorField, engineNoField, seatsNoField, licencePlateField, ownerNameField,
-	telephoneNoField, emailField, licenseNoField, socialSecurityNumberField, addressField, serviceRecordsField,
+	telephoneNoField, emailField, licenseNoField, socialSecurityNumberField, serviceRecordsField,
 	warrantyYearField, yearField;
+	
+	JTextArea addressField;
 	
 	JPanel mainPanel = new JPanel();
 	
@@ -58,20 +59,20 @@ public class ProfileDisplay extends JFrame{
 		addFormElements();
 		
 			
-	    BufferedImage image = null;
-        try
-        {
-          image = ImageIO.read(new File(profile.getPhoto()));
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace();
-          System.exit(1);
-        }
-        ImageIcon imageIcon = new ImageIcon(fitimage(image , 200, 200));
+//	    BufferedImage image = null;
+//        try
+//        {
+//          image = ImageIO.read(new File(profile.getPhoto()));
+//        }
+//        catch (Exception e)
+//        {
+//          e.printStackTrace();
+//          System.exit(1);
+//        }
+        ImageIcon imageIcon = new ImageIcon(fitimage(profile.getPhoto() , 300, 300));
         JLabel imageLabel = new JLabel();
         imageLabel.setIcon(imageIcon);
-        imageLabel.setBounds(frameHome.getWidth()-250, 10 ,200, 200);
+        imageLabel.setBounds(frameHome.getWidth()-350, 10 ,300, 300);
         mainPanel.add(imageLabel);
 	
 	
@@ -121,35 +122,35 @@ public class ProfileDisplay extends JFrame{
 
 		getLabel(brand, "Brand", 30, 50, 50, 30);
 		brandField = new JTextField();
-		getField(brandField, 90, 50, 200, 30);
+		getField(brandField, 90, 50, 200, 30, profile.getBrand());
 		
 		getLabel(model, "Model", 310, 50, 50, 30);
 		modelField = new JTextField();
-		getField(modelField, 370, 50, 200, 30);
+		getField(modelField, 370, 50, 200, 30, profile.getModel());
 		
 		getLabel(color, "Color", 590, 50, 50, 30);
 		colorField = new JTextField();
-		getField(colorField, 650, 50, 200, 30);
+		getField(colorField, 650, 50, 200, 30, profile.getColor());
 		
 		getLabel(year, "Year", 30, 110, 50, 30);
 		yearField = new JTextField();
-		getField(yearField, 90, 110, 200, 30);
+		getField(yearField, 90, 110, 200, 30, profile.getYear());
 		
 		getLabel(engineNo, "Engine No", 310, 110, 90, 30);
 		engineNoField = new JTextField();
-		getField(engineNoField, 390, 110, 200, 30);
+		getField(engineNoField, 390, 110, 200, 30, profile.getEngineNo());
 		
 		getLabel(seatsNo, "Seats Number", 610, 110, 110, 30);
 		seatsNoField = new JTextField();
-		getField(seatsNoField, 710, 110, 200, 30);
+		getField(seatsNoField, 710, 110, 200, 30, profile.getSeatsNo());
 		
 		getLabel(warrantyYear, "Warranty Year", 30, 170, 100, 30);
 		warrantyYearField = new JTextField();
-		getField(warrantyYearField, 140, 170, 200, 30);
+		getField(warrantyYearField, 140, 170, 200, 30, profile.getWarrantyYear());
 
 		getLabel(licencePlate, "License Plate", 360, 170, 110, 30);
 		licencePlateField = new JTextField();
-		getField(licencePlateField, 480, 170, 200, 30);
+		getField(licencePlateField, 480, 170, 200, 30, profile.getLicencePlate());
 		
 		getLabel(serviceRecords, "Service Records", 30, 230, 110, 30);
 		JTable serviceTable = new JTable(serviceData, serviceColumns);
@@ -172,27 +173,32 @@ public class ProfileDisplay extends JFrame{
 		
 		getLabel(ownerName, "Name ", 30, 400, 50, 30);
 		ownerNameField = new JTextField();
-		getField(ownerNameField, 90, 400, 200, 30);
+		getField(ownerNameField, 90, 400, 200, 30, profile.getOwnerName());
 		
 		getLabel(telephoneNo, "Telephone Number", 310, 400, 130, 30);
 		telephoneNoField = new JTextField();
-		getField(telephoneNoField, 450, 400, 200, 30);
+		getField(telephoneNoField, 450, 400, 200, 30, profile.getTelephoneNo());
 		
 		getLabel(email, "Email Address ", 680, 400, 110, 30);
 		emailField = new JTextField();
-		getField(emailField, 790, 400, 200, 30);
+		getField(emailField, 790, 400, 200, 30, profile.getEmail());
 		
 		getLabel(licenseNo, "Driver License", 30, 460, 110, 30);
 		licenseNoField = new JTextField();
-		getField(licenseNoField, 150, 460, 200, 30);
+		getField(licenseNoField, 150, 460, 200, 30, profile.getLicenseNo());
 		
 		getLabel(socialSecurityNumber, "Social Security Number", 380, 460, 160, 30);
 		socialSecurityNumberField = new JTextField();
-		getField(socialSecurityNumberField, 540, 460, 200, 30);
+		getField(socialSecurityNumberField, 540, 460, 200, 30, profile.getSocialSecurityNumber());
 		
 		getLabel(address, "Address", 770, 460, 160, 30);
-		addressField = new JTextField();
-		getField(addressField, 840, 460, 250, 100);
+		addressField = new JTextArea();
+		addressField.setText(profile.getAddress());
+		addressField.setBorder(BorderFactory.createEmptyBorder());
+		addressField.setBounds(840, 460, 250, 100);
+		addressField.setEditable(false);
+		addressField.setBackground(Color.WHITE);
+		mainPanel.add(addressField);
 		
 	}
 
@@ -205,10 +211,10 @@ public class ProfileDisplay extends JFrame{
 
 	}
 
-	private void getField(JTextField fieldObject, int x, int y, int width, int height) {
+	private void getField(JTextField fieldObject, int x, int y, int width, int height, String placeholder) {
 		fieldObject.setBorder(BorderFactory.createEmptyBorder());
 		fieldObject.setBounds(x, y, width, height);
-		fieldObject.setText(profile.getBrand());
+		fieldObject.setText(placeholder);
 		fieldObject.setEditable(false);
 		fieldObject.setBackground(Color.WHITE);
 		mainPanel.add(fieldObject);

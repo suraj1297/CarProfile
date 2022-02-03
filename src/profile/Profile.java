@@ -1,9 +1,13 @@
 package profile;
 
+import java.awt.image.BufferedImage;
+
 public class Profile {
 	
 	private String heading, message, brand, model, color, year, engineNo, seatsNo, licencePlate, ownerName, telephoneNo, email,
-	licenseNo, socialSecurityNumber, address ,serviceRecords, warrantyYear, Photo;
+	licenseNo, socialSecurityNumber, address ,serviceRecords, warrantyYear;
+	
+	private BufferedImage Photo;
 
 	public String getHeading() {
 		return heading;
@@ -141,11 +145,11 @@ public class Profile {
 		this.warrantyYear = warrantyYear;
 	}
 
-	public String getPhoto() {
+	public BufferedImage getPhoto() {
 		return Photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(BufferedImage photo) {
 		Photo = photo;
 	}
 	
