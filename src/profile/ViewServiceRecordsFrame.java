@@ -34,8 +34,7 @@ public class ViewServiceRecordsFrame extends JFrame{
 		tableView();
 
 		
-		
-		
+
 	}
 	
 	

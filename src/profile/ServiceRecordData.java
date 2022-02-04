@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class ServiceRecordData {
 	
-	ArrayList<String[]> record = new ArrayList<String[]>();
+	private ArrayList<String[]> record = new ArrayList<String[]>();
+	
 	
 	public ArrayList<String[]> getRecord() {
 		return record;
@@ -15,5 +16,17 @@ public class ServiceRecordData {
 		String[] data = {date, mileage, engineCheck};
 		this.record.add(data);
 	}
+	
+	public void setRecordUsingArrayList(ArrayList<String[]> record) {
+		
+		clearArrayList();
+		this.record = record;
+	}
+	
+	
+	public void clearArrayList() {
+		record.clear();
+	}
+
 
 }
