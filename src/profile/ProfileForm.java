@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -42,14 +41,19 @@ public class ProfileForm extends JFrame {
 
 	Profile profile = new Profile();
 
+	ServiceRecordData record = new ServiceRecordData();
+
+	ServiceRecordFrame recordFrame;
+
 	JLabel message = new JLabel("All fields in form are mandatory. For Car image only .jpg and .png files allowed.");
 
 	JLabel heading, brand, model, color, year, engineNo, seatsNo, licencePlate, ownerName, telephoneNo, email,
 			licenseNo, socialSecurityNumber, address, serviceRecords, warrantyYear, Photo, imageName;
 
 	JTextField brandField, modelField, colorField, engineNoField, seatsNoField, licencePlateField, ownerNameField,
-			telephoneNoField, emailField, licenseNoField, socialSecurityNumberField, addressField, serviceRecordsField,
-			warrantyYearField;
+			telephoneNoField, emailField, licenseNoField, socialSecurityNumberField, addressField, warrantyYearField;
+
+	JButton addServiceBtn;
 
 	UtilDateModel yearField = new UtilDateModel();
 	Properties p = new Properties();
@@ -66,26 +70,30 @@ public class ProfileForm extends JFrame {
 	Panel formPanel1 = new Panel();
 	Panel formPanel2 = new Panel();
 
+	JFrame formFrame = new JFrame();
+
 	ProfileForm(JFrame homeFrame) {
 
 		this.homeFrame = homeFrame;
 
 		// Basic Setup
-		setTitle("Car Profile Form");
-		setVisible(true);
-		setSize(1000, 600);
-		setLayout(new BorderLayout());
+		formFrame.setTitle("Car Profile Form");
+		formFrame.setVisible(true);
+		homeFrame.setEnabled(false);
+		formFrame.setAlwaysOnTop(true);
+		formFrame.setSize(1000, 600);
+		formFrame.setLayout(new BorderLayout());
 
 		// Heading Panel
 		headingPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
-		add(headingPanel, BorderLayout.PAGE_START);
+		formFrame.add(headingPanel, BorderLayout.PAGE_START);
 
 		heading = new JLabel("Car Profile Form");
 		headingPanel.add(heading);
 
 		// Form Outer panel
 		formPanel.setLayout(new GridLayout(1, 2));
-		add(formPanel, BorderLayout.CENTER);
+		formFrame.add(formPanel, BorderLayout.CENTER);
 
 		// Left form panel
 		formPanel1.setLayout(null);
@@ -102,7 +110,7 @@ public class ProfileForm extends JFrame {
 		Panel footerPanel = new Panel();
 		footerPanel.setPreferredSize(new Dimension(1000, 120));
 		footerPanel.setLayout(null);
-		add(footerPanel, BorderLayout.PAGE_END);
+		formFrame.add(footerPanel, BorderLayout.PAGE_END);
 
 		submitButton = new JButton("Submit");
 		submitButton.setBounds(40, 20, 100, 30);
@@ -118,13 +126,27 @@ public class ProfileForm extends JFrame {
 		// afterFocusListener
 		validateAfterFocusLost();
 
+		// add Listener to service record button
+
+		serviceRecordListener();
+
 		// adding listener to submit button
 		submitButtonListener();
 
-		addWindowListener(new WindowAdapter() {
+		formFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				dispose();
+				homeFrame.setEnabled(true);
+				formFrame.dispose();
+
 			}
+		});
+
+	}
+
+	private void serviceRecordListener() {
+
+		addServiceBtn.addActionListener(e -> {
+			recordFrame = new ServiceRecordFrame(record, formFrame);
 		});
 
 	}
@@ -226,7 +248,7 @@ public class ProfileForm extends JFrame {
 				String value = seatsNoField.getText();
 				if (value.length() > 0 && (!Character.isDigit(value.charAt(value.length() - 1))
 						|| specialCharacters.contains(Character.toString(value.charAt(value.length() - 1)))
-						|| value.length() > 2)) {
+						|| value.length() > 1)) {
 					seatsNoField.setText(value.substring(0, value.length() - 1));
 				}
 			}
@@ -364,21 +386,21 @@ public class ProfileForm extends JFrame {
 			}
 		});
 
-		serviceRecordsField.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				String value = serviceRecordsField.getText();
-				if (value.length() > 0 && (!Character.isDigit(value.charAt(value.length() - 1))
-						|| specialCharacters.contains(Character.toString(value.charAt(value.length() - 1)))
-						|| value.length() > 2)) {
-					serviceRecordsField.setText(value.substring(0, value.length() - 1));
-				}
-			}
-		});
+//		serviceRecordsField.addFocusListener(new FocusListener() {
+//			@Override
+//			public void focusLost(FocusEvent e) {
+//			}
+//
+//			@Override
+//			public void focusGained(FocusEvent e) {
+//				String value = serviceRecordsField.getText();
+//				if (value.length() > 0 && (!Character.isDigit(value.charAt(value.length() - 1))
+//						|| specialCharacters.contains(Character.toString(value.charAt(value.length() - 1)))
+//						|| value.length() > 2)) {
+//					serviceRecordsField.setText(value.substring(0, value.length() - 1));
+//				}
+//			}
+//		});
 
 		warrantyYearField.addFocusListener(new FocusListener() {
 			@Override
@@ -714,8 +736,8 @@ public class ProfileForm extends JFrame {
 
 			char c = chars[i];
 
-			if (specialCharacters.contains(Character.toString(c)) || !Character.isDigit(c) || value.length() > 2) {
-				dialogMessage("Error: " + fieldName + " can be one digit or two digit number only");
+			if (specialCharacters.contains(Character.toString(c)) || !Character.isDigit(c) || value.length() > 1) {
+				dialogMessage("Error: " + fieldName + " can be one digit number only");
 				break;
 			}
 		}
@@ -761,7 +783,7 @@ public class ProfileForm extends JFrame {
 		validateString(licenseNoField, "Owner Driver License", "licenseNo");
 		validateString(socialSecurityNumberField, "Social Security Number", "ssn");
 		validateString(addressField, "Owner Address", "address");
-		validateString(serviceRecordsField, "Service Records", "serviceRecords");
+//		validateString(serviceRecordsField, "Service Records", "serviceRecords");
 		validateString(warrantyYearField, "Warranty Year", "warranty");
 		validateString(emailField, "Email", "email");
 	}
@@ -827,8 +849,10 @@ public class ProfileForm extends JFrame {
 		getField(addressField, 170, 180, 200, 25, formPanel2);
 
 		getLabel(serviceRecords, "Service Records", formPanel2, 40, 220, 110, 20);
-		serviceRecordsField = new JTextField();
-		getField(serviceRecordsField, 170, 220, 200, 25, formPanel2);
+		addServiceBtn = new JButton("Add Service Records");
+		addServiceBtn.setBorder(BorderFactory.createEmptyBorder());
+		addServiceBtn.setBounds(170, 220, 150, 30);
+		formPanel2.add(addServiceBtn);
 
 		getLabel(warrantyYear, "Warranty Year", formPanel2, 40, 260, 110, 20);
 		warrantyYearField = new JTextField();
@@ -849,7 +873,7 @@ public class ProfileForm extends JFrame {
 
 	private void imageUploadListener() {
 		PhotoField.addActionListener(e -> {
-			int returnVal = image.showOpenDialog(null);
+			int returnVal = image.showOpenDialog(formFrame);
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = image.getSelectedFile();
@@ -859,7 +883,7 @@ public class ProfileForm extends JFrame {
 				if (extension.equals("jpg") || extension.equals("png")) {
 					finalImage = file.getPath();
 					try {
-						uploadedImage =  ImageIO.read(file);
+						uploadedImage = ImageIO.read(file);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -888,7 +912,7 @@ public class ProfileForm extends JFrame {
 				profile.setColor(colorField.getText());
 
 				Date selectedDate = (Date) datePicker.getModel().getValue();
-				SimpleDateFormat myFormat = new SimpleDateFormat("dd MMMM yyyy");
+				SimpleDateFormat myFormat = new SimpleDateFormat("yyyy");
 				profile.setYear(myFormat.format(selectedDate));
 
 				profile.setEngineNo(engineNoField.getText());
@@ -900,16 +924,17 @@ public class ProfileForm extends JFrame {
 				profile.setLicenseNo(licenseNoField.getText());
 				profile.setSocialSecurityNumber(socialSecurityNumberField.getText());
 				profile.setAddress(addressField.getText());
-				profile.setServiceRecords(serviceRecordsField.getText());
+				profile.setServiceRecords(record.getRecord());
 				profile.setWarrantyYear(warrantyYearField.getText());
 				profile.setPhoto(uploadedImage);
 
 				boolean allFieldsValid = validateAllFields(profile);
-		
+
 				if (allFieldsValid) {
 					new Homepage(profile);
+					formFrame.setEnabled(true);
 					homeFrame.dispose();
-					dispose();
+					formFrame.dispose();
 				} else {
 					dialogMessage("Error: Please fill all the details correctly");
 				}
@@ -928,8 +953,8 @@ public class ProfileForm extends JFrame {
 				&& profile2.getOwnerName().length() > 0 && profile2.getTelephoneNo().length() > 0
 				&& profile2.getEmail().length() > 0 && profile2.getLicenseNo().length() > 0
 				&& profile2.getSocialSecurityNumber().length() > 0 && profile2.getAddress().length() > 0
-				&& profile2.getServiceRecords().length() > 0 && profile2.getWarrantyYear().length() > 0
-				&& profile2.getPhoto() != null) {
+				&& profile2.getServiceRecords() != null && profile2.getServiceRecords().size() > 0
+				&& profile2.getWarrantyYear().length() > 0 && profile2.getPhoto() != null) {
 			return true;
 		}
 
@@ -952,7 +977,7 @@ public class ProfileForm extends JFrame {
 	}
 
 	private void dialogMessage(String message) {
-		JOptionPane.showMessageDialog(null, message, "Error Message", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(formFrame, message, "Error Message", JOptionPane.ERROR_MESSAGE);
 	}
 
 }

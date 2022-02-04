@@ -1,11 +1,14 @@
 package profile;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Profile {
 	
 	private String heading, message, brand, model, color, year, engineNo, seatsNo, licencePlate, ownerName, telephoneNo, email,
-	licenseNo, socialSecurityNumber, address ,serviceRecords, warrantyYear;
+	licenseNo, socialSecurityNumber, address , warrantyYear;
+	
+	private ArrayList<String[]> serviceRecords;
 	
 	private BufferedImage Photo;
 
@@ -129,11 +132,11 @@ public class Profile {
 		this.address = address;
 	}
 
-	public String getServiceRecords() {
+	public ArrayList<String[]> getServiceRecords() {
 		return serviceRecords;
 	}
 
-	public void setServiceRecords(String serviceRecords) {
+	public void setServiceRecords(ArrayList<String[]> serviceRecords) {
 		this.serviceRecords = serviceRecords;
 	}
 

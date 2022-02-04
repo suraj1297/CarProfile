@@ -10,11 +10,10 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -31,12 +30,17 @@ public class ProfileDisplay extends JFrame{
 	
 	JTextArea addressField;
 	
+	JButton viewRecords;
+	
 	JPanel mainPanel = new JPanel();
 	
 	Profile profile;
 	
+	JFrame homeFrame;
+	
 	ProfileDisplay(Profile profile, JFrame homeFrame){
 		this.profile = profile;
+		this.homeFrame = homeFrame;
 		
 		if(profile.getYear() == null || profile.getYear().length() == 0) {
 			 homeFrame.add(ProfileDisplayPanel(), BorderLayout.CENTER);
@@ -105,13 +109,13 @@ public class ProfileDisplay extends JFrame{
 
 	public void addFormElements() {
 		
-		String[][] serviceData = {
-            { "Brand", profile.getBrand()},
-            { "Model", profile.getModel()},
-            { "Color", profile.getColor()},
-		};
-		
-		String[] serviceColumns = {"Date", "Service Detail"};
+//		String[][] serviceData = {
+//            { "Brand", profile.getBrand()},
+//            { "Model", profile.getModel()},
+//            { "Color", profile.getColor()},
+//		};
+//		
+//		String[] serviceColumns = {"Date", "Service Detail"};
 		
 		JLabel car = new JLabel();
 		car.setBounds(10, 0, 150, 50);
@@ -153,16 +157,11 @@ public class ProfileDisplay extends JFrame{
 		getField(licencePlateField, 480, 170, 200, 30, profile.getLicencePlate());
 		
 		getLabel(serviceRecords, "Service Records", 30, 230, 110, 30);
-		JTable serviceTable = new JTable(serviceData, serviceColumns);
-		serviceTable.setBackground(Color.WHITE);
-		serviceTable.setRowHeight(serviceTable.getRowHeight() + 10);
-		serviceTable.setFillsViewportHeight(true);
-	    JScrollPane servicePane = new JScrollPane(serviceTable);
-	    servicePane.setBounds(150, 230, 370, 101);
-	    serviceTable.getColumnModel().getColumn(0).setPreferredWidth(70);
-	    serviceTable.getColumnModel().getColumn(1).setPreferredWidth(300);
-	    serviceTable.setEnabled(false);
-	    mainPanel.add(servicePane);
+		viewRecords = new JButton("View Records");
+		viewRecords.setBounds(150, 230, 140, 30);
+		mainPanel.add(viewRecords);
+		viewRecordsBtnListener();
+		
 	    
 		JLabel owner = new JLabel();
 		owner.setBounds(10, 340, 200, 50);
@@ -200,6 +199,12 @@ public class ProfileDisplay extends JFrame{
 		addressField.setBackground(Color.WHITE);
 		mainPanel.add(addressField);
 		
+	}
+	
+	private void viewRecordsBtnListener() {
+		viewRecords.addActionListener(e ->{
+			new ViewServiceRecordsFrame(homeFrame, profile.getServiceRecords());
+		});
 	}
 
 	private void getLabel(JLabel labelObject, String labeltext, int x, int y, int width,
