@@ -13,9 +13,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -26,9 +23,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -51,14 +45,16 @@ public class ProfileForm extends JFrame {
 			licenseNo, socialSecurityNumber, address, serviceRecords, warrantyYear, Photo, imageName;
 
 	JTextField brandField, modelField, colorField, engineNoField, seatsNoField, licencePlateField, ownerNameField,
-			telephoneNoField, emailField, licenseNoField, socialSecurityNumberField, addressField, warrantyYearField;
+			telephoneNoField, emailField, licenseNoField, socialSecurityNumberField, addressField, warrantyYearField, yearField;
 
 	JButton addServiceBtn;
+	
+//	JSpinner ;
 
-	UtilDateModel yearField = new UtilDateModel();
-	Properties p = new Properties();
-	JDatePanelImpl datePanel;
-	JDatePickerImpl datePicker;
+//	UtilDateModel yearField = new UtilDateModel();
+//	Properties p = new Properties();
+//	JDatePanelImpl datePanel;
+//	JDatePickerImpl datePicker;
 
 	JButton submitButton, PhotoField;
 	JFileChooser image;
@@ -386,22 +382,6 @@ public class ProfileForm extends JFrame {
 			}
 		});
 
-//		serviceRecordsField.addFocusListener(new FocusListener() {
-//			@Override
-//			public void focusLost(FocusEvent e) {
-//			}
-//
-//			@Override
-//			public void focusGained(FocusEvent e) {
-//				String value = serviceRecordsField.getText();
-//				if (value.length() > 0 && (!Character.isDigit(value.charAt(value.length() - 1))
-//						|| specialCharacters.contains(Character.toString(value.charAt(value.length() - 1)))
-//						|| value.length() > 2)) {
-//					serviceRecordsField.setText(value.substring(0, value.length() - 1));
-//				}
-//			}
-//		});
-
 		warrantyYearField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -457,7 +437,29 @@ public class ProfileForm extends JFrame {
 				}
 			}
 		});
+		
+		yearField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				String value = yearField.getText();
+				if (value.length() > 0 && !e.isTemporary() && (Integer.parseInt(value) < 1900 || Integer.parseInt(value) > 3000)) {
+					dialogMessage("Error: Year can be between 1900 and 3000.");
+					yearField.setText("");
+				}
+			}
 
+			@Override
+			public void focusGained(FocusEvent e) {
+				String value = yearField.getText();
+				if (value.length() > 0
+						&& (specialCharacters.contains(Character.toString(value.charAt(value.length() - 1)))
+								|| !Character.isDigit(value.charAt(value.length() - 1)) || value.length() > 4)) {
+					yearField.setText(value.substring(0, value.length() - 1));
+				}
+			}
+		});
+
+		
 	}
 
 	private boolean validateEmailAfterFocus(String value) {
@@ -615,6 +617,11 @@ public class ProfileForm extends JFrame {
 					validateEmail(value);
 					break;
 				}
+				case "year": {
+
+					validateYear(value);
+					break;
+				}
 
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + validateField);
@@ -623,6 +630,21 @@ public class ProfileForm extends JFrame {
 			}
 
 		});
+	}
+
+	private void validateYear(String value) {
+		char[] chars = value.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+
+			char c = chars[i];
+
+			if (specialCharacters.contains(Character.toString(c)) || !Character.isDigit(c) || value.length() > 4) {
+				dialogMessage("Error: Year can be between 1900 and 3000.");
+				break;
+			}
+
+		}
+		
 	}
 
 	private void validateEmail(String value) {
@@ -654,7 +676,7 @@ public class ProfileForm extends JFrame {
 
 	}
 
-	protected void validateAddress(String value) {
+	private void validateAddress(String value) {
 		char[] chars = value.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
 
@@ -786,6 +808,7 @@ public class ProfileForm extends JFrame {
 //		validateString(serviceRecordsField, "Service Records", "serviceRecords");
 		validateString(warrantyYearField, "Warranty Year", "warranty");
 		validateString(emailField, "Email", "email");
+		validateString(yearField, "Year", "year");
 	}
 
 	public void addFormElements() {
@@ -803,14 +826,18 @@ public class ProfileForm extends JFrame {
 		getField(colorField, 170, 100, 200, 25, formPanel1);
 
 		getLabel(year, "Year", formPanel1, 40, 140, 110, 20);
-		p.put("text.today", "Today");
-		p.put("text.month", "Month");
-		p.put("text.year", "Year");
-		datePanel = new JDatePanelImpl(yearField, p);
-		datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-		datePicker.setBorder(BorderFactory.createEmptyBorder());
-		datePicker.setBounds(170, 140, 200, 25);
-		formPanel1.add(datePicker);
+//		p.put("text.today", "Today");
+//		p.put("text.month", "Month");
+//		p.put("text.year", "Year");
+//		datePanel = new JDatePanelImpl(yearField, p);
+//		datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+//		datePicker.setBorder(BorderFactory.createEmptyBorder());
+//		datePicker.setBounds(170, 140, 200, 25);
+		
+		yearField = new JTextField();
+		getField(yearField, 170, 140, 200, 25, formPanel1);
+//		yearField.setBounds(170, 140, 200, 25);
+//		formPanel1.add(yearField);
 
 		getLabel(engineNo, "Engine Number", formPanel1, 40, 180, 110, 20);
 		engineNoField = new JTextField();
@@ -899,10 +926,10 @@ public class ProfileForm extends JFrame {
 
 		submitButton.addActionListener(e -> {
 
-			if (datePicker.getModel().getValue() == null && finalImage.length() < 5) {
-				dialogMessage("Error: please enter date and upload image");
-			} else if (datePicker.getModel().getValue() == null) {
-				dialogMessage("Error: please enter date");
+			if ((record.getRecord() == null || record.getRecord().size() == 0) && finalImage.length() < 5) {
+				dialogMessage("Error: please enter service record details and upload image");
+			} else if (record.getRecord() == null || record.getRecord().size() == 0) {
+				dialogMessage("Error: please enter service record details");
 			} else if (finalImage.length() < 5) {
 				dialogMessage("Error: please upload image");
 			} else {
@@ -910,10 +937,7 @@ public class ProfileForm extends JFrame {
 				profile.setBrand(brandField.getText());
 				profile.setModel(modelField.getText());
 				profile.setColor(colorField.getText());
-
-				Date selectedDate = (Date) datePicker.getModel().getValue();
-				SimpleDateFormat myFormat = new SimpleDateFormat("yyyy");
-				profile.setYear(myFormat.format(selectedDate));
+				profile.setYear(yearField.getText());
 
 				profile.setEngineNo(engineNoField.getText());
 				profile.setSeatsNo(seatsNoField.getText());
