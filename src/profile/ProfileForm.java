@@ -628,7 +628,6 @@ public class ProfileForm extends JFrame {
 				}
 
 			}
-
 		});
 	}
 
